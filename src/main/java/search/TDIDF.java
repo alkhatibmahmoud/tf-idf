@@ -3,6 +3,7 @@ package main.java.search;
 import main.java.model.DocumentData;
 
 import java.util.List;
+import java.util.Map;
 
 public class TDIDF {
     public static double calculateTermFrequency(List<String> document, String searchTerm){
@@ -25,5 +26,14 @@ public class TDIDF {
             documentData.putTermFrequency(searchTerm, searchTermFrequency);
         }
         return documentData;
+    }
+
+    public static double getInverseDocumentFrequency(String searchTerm, Map<String, DocumentData> documentSearchResults){
+        double numberOfDocumentsWithSearchTerm = 0.0;
+        for(String document: documentSearchResults.keySet()){
+            DocumentData documentData = documentSearchResults.get(document);
+            if(documentData.getTermFrequency(searchTerm) > 0.0) numberOfDocumentsWithSearchTerm++;
+        }
+        return numberOfDocumentsWithSearchTerm == 0 ? 0 : Math.log10(documentSearchResults.size() / numberOfDocumentsWithSearchTerm);
     }
 }

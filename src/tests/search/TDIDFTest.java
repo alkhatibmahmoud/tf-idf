@@ -4,9 +4,8 @@ import main.java.model.DocumentData;
 import main.java.search.TDIDF;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+
+import java.util.*;
 
 public class TDIDFTest {
 
@@ -57,4 +56,25 @@ public class TDIDFTest {
         assertEquals(0.0, documentData.getTermFrequency("banana"), 0.001);
         assertEquals(0.0, documentData.getTermFrequency("orange"), 0.001);
     }
+
+    @Test
+    public void testGetInverseDocumentFrequency() {
+        Map<String, DocumentData> documentSearchResults = new HashMap<>();
+        List<String> document1 = Arrays.asList("apple", "banana", "apple", "orange", "banana");
+        List<String> document2 = Arrays.asList("apple", "orange", "orange");
+        List<String> searchTerms = Arrays.asList("apple", "banana", "orange");
+
+        documentSearchResults.put("doc1", TDIDF.createDocumentData(document1, searchTerms));
+        documentSearchResults.put("doc2", TDIDF.createDocumentData(document2, searchTerms));
+
+        double result = TDIDF.getInverseDocumentFrequency("apple", documentSearchResults);
+        assertEquals(0.0, result, 0.001);
+
+        result = TDIDF.getInverseDocumentFrequency("banana", documentSearchResults);
+        assertEquals(0.301, result, 0.001);
+
+        result = TDIDF.getInverseDocumentFrequency("orange", documentSearchResults);
+        assertEquals(0.0, result, 0.001);
+    }
+
 }
